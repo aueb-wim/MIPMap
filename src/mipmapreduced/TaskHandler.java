@@ -53,13 +53,6 @@ public class TaskHandler {
                     }
                 }
             }
-            for(String item: colNames){
-                System.out.println(item);
-            }
-            System.out.println("---");
-            for(String item: keepColNames){
-                System.out.println(item);
-            }
             daoUnpivot.unpivotTable(keepColNames, colNames, newColName, file);
         } catch (IOException ex) {
             System.out.println(ex);
