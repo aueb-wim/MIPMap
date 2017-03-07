@@ -3,19 +3,18 @@ package mipmapreduced;
 import it.unibas.spicy.model.mapping.MappingTask;
 import it.unibas.spicy.persistence.DAOException;
 import it.unibas.spicy.persistence.DAOMappingTask;
+import it.unibas.spicy.persistence.csv.ChangeDelimiterCSV;
 import it.unibas.spicy.persistence.csv.DAOCsv;
 import it.unibas.spicy.persistence.csv.UnpivotCSVDAO;
 import it.unibas.spicy.utility.SpicyEngineConstants;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TaskHandler {
-    private String fileAbsoluteFile, targetPath, newColName, commandForColumns;
+    private String fileAbsoluteFile, targetPath, newColName, commandForColumns, sourceDelimiter, sourceQuotes;
     private boolean pkConstraints;
     private String[] selectedColumns;
     public TaskHandler(String fileAbsoluteFile, String targetPath, boolean pkConstraints) {
@@ -30,6 +29,12 @@ public class TaskHandler {
         this.selectedColumns = selectedColumns;
         this.newColName = newColName;
         this.commandForColumns = commandForColumns;
+    }
+    
+    public TaskHandler(String fileAbsoluteFile, String sourceDelimiter, String sourceQuotes) {
+        this.fileAbsoluteFile = fileAbsoluteFile;
+        this.sourceDelimiter = sourceDelimiter;
+        this.sourceQuotes = sourceQuotes;
     }
     
     public void unPivot() throws DAOException, SQLException, IOException{
@@ -66,6 +71,18 @@ public class TaskHandler {
             System.out.println(ex);
             System.exit(-1);
         } 
+    }
+    
+    public void changeDelimeter() {
+        
+        try{
+            File file = new File(fileAbsoluteFile);
+            ChangeDelimiterCSV changer = new ChangeDelimiterCSV();
+            changer.changeDelimiter(file, sourceDelimiter, sourceQuotes, true);
+        } catch (IOException ex){
+            System.err.println(ex);
+            System.exit(-1);
+        }
     }
     
     
