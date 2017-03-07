@@ -1,30 +1,32 @@
 package mipmapreduced;
 
 import org.apache.commons.io.FilenameUtils;
+import utils.ReadFiles;
 
 public class MIPMapReduced {
-
-    
+  
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         try{     
             if (args[0].equals("-unpivot")){
-                if (args.length != 5) {
+                if (args.length != 6) {
                     printWrongInputMessage("unpivot");
                 }else {
+                    
                     String inputPath = FilenameUtils.separatorsToSystem(args[1]);
                     String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
                     String newColName = args[3];
-                    String[] columns = args[4].split(",");
+                    String commandForColumns = args[4];
+                    ReadFiles f = new ReadFiles(args[5]);
+                    String[] columns = f.readByLine();
                     DirectoryChecker checker = new DirectoryChecker();
-                    if (checker.checkFileValidity(inputPath) && checker.checkFileValidity(dbConfFile))
-                    { 
+                    if (checker.checkFileValidity(inputPath) && checker.checkFileValidity(dbConfFile)) { 
                         DbConnector dbconnect = new DbConnector();        
                         dbconnect.configureDatabaseProperties(dbConfFile); 
                         TaskHandler handleMappingTask = 
-                                new TaskHandler(inputPath, columns, newColName);
+                                new TaskHandler(inputPath, commandForColumns, columns, newColName);
                         handleMappingTask.unPivot();
                     } else {
                         System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
@@ -68,8 +70,8 @@ public class MIPMapReduced {
             
         }        
         catch (Exception ex){
-            System.out.println(ex);
-            ex.printStackTrace();
+            System.err.println(ex);
+            System.exit(-1);
         }        
     }
     

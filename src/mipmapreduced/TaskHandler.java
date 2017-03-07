@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TaskHandler {
-    private String fileAbsoluteFile;
-    private String targetPath, newColName;
+    private String fileAbsoluteFile, targetPath, newColName, commandForColumns;
     private boolean pkConstraints;
     private String[] selectedColumns;
     public TaskHandler(String fileAbsoluteFile, String targetPath, boolean pkConstraints) {
@@ -26,10 +25,11 @@ public class TaskHandler {
         
     }
     
-    public TaskHandler(String fileAbsoluteFile, String[] selectedColumns, String newColName) {
+    public TaskHandler(String fileAbsoluteFile, String commandForColumns, String[] selectedColumns, String newColName) {
         this.fileAbsoluteFile = fileAbsoluteFile;
         this.selectedColumns = selectedColumns;
         this.newColName = newColName;
+        this.commandForColumns = commandForColumns;
     }
     
     public void unPivot() throws DAOException, SQLException, IOException{
@@ -39,12 +39,16 @@ public class TaskHandler {
             UnpivotCSVDAO daoUnpivot = new UnpivotCSVDAO();
             File file = new File(fileAbsoluteFile);
             String[] columnNames = daoUnpivot.getCsvTableColumns(file);
-            //we keep all columns for pivoting
-            if (selectedColumns.length == 1 && selectedColumns[0].equalsIgnoreCase("keepall")){
+            
+            if (commandForColumns.equals("-i")){
                 for(String col: columnNames){
-                    colNames.add(col);
+                    if (Arrays.asList(selectedColumns).contains(col)){
+                        keepColNames.add(col);
+                    } else {
+                        colNames.add(col);
+                    }
                 }
-            } else {
+            } else if (commandForColumns.equals("-u")) {
                 for(String col: columnNames){
                     if (!Arrays.asList(selectedColumns).contains(col)){
                         keepColNames.add(col);
@@ -52,7 +56,11 @@ public class TaskHandler {
                         colNames.add(col);
                     }
                 }
-            }
+            } else {
+                System.err.println("Wrong unpivot command");
+                System.exit(-1);
+            }          
+            
             daoUnpivot.unpivotTable(keepColNames, colNames, newColName, file);
         } catch (IOException ex) {
             System.out.println(ex);
