@@ -64,7 +64,7 @@ public class TaskHandler {
             daoUnpivot.unpivotTable(keepColNames, colNames, newColName, file);
         } catch (IOException ex) {
             System.out.println(ex);
-            ex.printStackTrace();
+            System.exit(-1);
         } 
     }
     
@@ -85,7 +85,7 @@ public class TaskHandler {
             System.out.println("Translated instances successfully exported to "+targetPath);            
         } catch (DAOException | SQLException | IOException ex) {
             System.out.println(ex);
-            ex.printStackTrace();
+            System.exit(-1);
         }            
     }
     

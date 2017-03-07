@@ -33,6 +33,7 @@ public class ReadFiles {
             }
         } catch(IOException ex){
             System.err.print(ex);
+            System.exit(-1);
         } finally {
             in.close();
         }

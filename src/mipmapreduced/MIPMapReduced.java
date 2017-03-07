@@ -64,6 +64,7 @@ public class MIPMapReduced {
                     }
                     else {
                         System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
+                        System.exit(-1);
                     }
                 }
             }
@@ -81,8 +82,9 @@ public class MIPMapReduced {
             System.out.println("java -jar <Path To Jar>/MIPMapReduced.jar "
                     + "-unpivot "
                     + "<Path To Mapping Csv File/SomeFile.csv> "
-                    + "<new column name> "
-                    + "<columns that include in pivoting, comma separated or keepall to keep all columns> ");
+                    + "<new column name> " 
+                    + "unpivoting command(-i(gnore) or -u(npivot)) "
+                    + "<Path to column file/filename (columns(line by line) that included or excluded(regarding previous command selection) from unpivoting)>");
         } else if (option.equals("translate")){
             System.out.println("\nWrong input. For correct MIPMapReduced usage run jar as:");
             System.out.println("java -jar <Path To Jar>/MIPMapReduced.jar <Path To Mapping Task File/Mapping Task File.xml> "
