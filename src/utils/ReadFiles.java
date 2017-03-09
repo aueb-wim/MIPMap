@@ -7,6 +7,7 @@ package utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ReadFiles {
         this.fileName = fileName;    
     }
     
-    public String[] readByLine() throws IOException{
+    public String[] readByLine() throws IOException {
         ArrayList<String> columnList = new ArrayList();
         BufferedReader in = new BufferedReader(new FileReader(fileName));
         try{
@@ -38,5 +39,22 @@ public class ReadFiles {
             in.close();
         }
         return columnList.toArray(new String[0]);
+    }
+    
+    public ArrayList<String> getExportDatabaseConfig() throws FileNotFoundException, IOException{
+        ArrayList<String> config = new ArrayList<>();
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        try{
+            String line;
+            while((line = in.readLine()) != null) {
+                config.add(line.split("=")[1].trim());
+            }
+        } catch(IOException ex){
+            System.err.print(ex);
+            System.exit(-1);
+        } finally {
+            in.close();
+        }
+        return config;
     }
 }

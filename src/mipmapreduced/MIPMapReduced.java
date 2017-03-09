@@ -3,6 +3,7 @@ package mipmapreduced;
 import it.unibas.spicy.persistence.DAOException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import org.apache.commons.io.FilenameUtils;
 import utils.ReadFiles;
 
@@ -26,9 +27,10 @@ public class MIPMapReduced {
                     String absoluteMappingTaskFilepath = FilenameUtils.separatorsToSystem(args[0]);
                     String exportPath = FilenameUtils.separatorsToSystem(args[1]);
                     String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
+                    String exportDatabaseConfig = FilenameUtils.separatorsToSystem(args[3]);
                     boolean pkConstraints = true;
-                    if (args.length == 4){                
-                        String pk = args[3];
+                    if (args.length == 5){                
+                        String pk = args[4];
                         if (pk.equalsIgnoreCase("t") || pk.equalsIgnoreCase("true"))
                             pkConstraints = true;
                         else if (pk.equalsIgnoreCase("f") || pk.equalsIgnoreCase("false"))
@@ -40,12 +42,11 @@ public class MIPMapReduced {
                     DirectoryChecker checker = new DirectoryChecker();
                     if (checker.checkFileValidity(absoluteMappingTaskFilepath) 
                         && checker.checkDirectoryValidity(exportPath)
-                        && checker.checkFileValidity(dbConfFile)) 
-                    {            
+                        && checker.checkFileValidity(dbConfFile)) {            
                         DbConnector dbconnect = new DbConnector();        
                         dbconnect.configureDatabaseProperties(dbConfFile); 
 
-                        TaskHandler handleMappingTask = new TaskHandler(absoluteMappingTaskFilepath, exportPath, pkConstraints);
+                        TaskHandler handleMappingTask = new TaskHandler(absoluteMappingTaskFilepath, exportPath, exportDatabaseConfig, pkConstraints);
                         handleMappingTask.performAction(); 
                     }
                     else {
@@ -54,7 +55,6 @@ public class MIPMapReduced {
                     }
                 }
             }
-            
         }        
         catch (Exception ex){
             System.err.println(ex);
@@ -97,7 +97,6 @@ public class MIPMapReduced {
             String inputPath = FilenameUtils.separatorsToSystem(args[1]);
             String sourceDelimiter = args[2];
             String sourceQuotes = args[3];
-            System.out.println(sourceQuotes);
             if (sourceDelimiter.equalsIgnoreCase(";")) {
                 sourceDelimiter = "Semi-colon";
             } else if (sourceDelimiter.equalsIgnoreCase(":")) {

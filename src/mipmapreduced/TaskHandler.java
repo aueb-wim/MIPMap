@@ -6,21 +6,24 @@ import it.unibas.spicy.persistence.DAOMappingTask;
 import it.unibas.spicy.persistence.csv.ChangeDelimiterCSV;
 import it.unibas.spicy.persistence.csv.DAOCsv;
 import it.unibas.spicy.persistence.csv.UnpivotCSVDAO;
+import it.unibas.spicy.persistence.sql.DAOSql;
 import it.unibas.spicy.utility.SpicyEngineConstants;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import utils.ReadFiles;
 
 public class TaskHandler {
-    private String fileAbsoluteFile, targetPath, newColName, commandForColumns, sourceDelimiter, sourceQuotes;
+    private String fileAbsoluteFile, exportDatabaseConfig, targetPath, newColName, commandForColumns, sourceDelimiter, sourceQuotes;
     private boolean pkConstraints;
     private String[] selectedColumns;
-    public TaskHandler(String fileAbsoluteFile, String targetPath, boolean pkConstraints) {
+    public TaskHandler(String fileAbsoluteFile, String targetPath, String exportDatabaseConfig, boolean pkConstraints) {
         this.fileAbsoluteFile = fileAbsoluteFile;
         this.targetPath = targetPath;
         this.pkConstraints = pkConstraints;
+        this.exportDatabaseConfig = exportDatabaseConfig;
         
     }
     
@@ -97,6 +100,12 @@ public class TaskHandler {
             
             DAOCsv daoCsv = new DAOCsv();   
             daoCsv.exportTranslatedCSVinstances(mappingTask, targetPath, 1);
+            
+            ReadFiles f = new ReadFiles(exportDatabaseConfig);
+            ArrayList<String> config = f.getExportDatabaseConfig();
+            
+            DAOSql dao = new DAOSql();
+            dao.exportTranslatedSQLInstances(mappingTask, 1, config.get(0), config.get(1)+config.get(4), config.get(2), config.get(3));
             
             System.out.println();
             System.out.println("Translated instances successfully exported to "+targetPath);            
