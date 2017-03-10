@@ -98,17 +98,17 @@ public class TaskHandler {
             InstanceTranslator translate = new InstanceTranslator();
             translate.performAction(mappingTask, pkConstraints , targetPath);
             
-            DAOCsv daoCsv = new DAOCsv();   
-            daoCsv.exportTranslatedCSVinstances(mappingTask, targetPath, 1);
-            
-            ReadFiles f = new ReadFiles(exportDatabaseConfig);
-            ArrayList<String> config = f.getExportDatabaseConfig();
-            
-            DAOSql dao = new DAOSql();
-            dao.exportTranslatedSQLInstances(mappingTask, 1, config.get(0), config.get(1)+config.get(4), config.get(2), config.get(3));
-            
+            if(exportDatabaseConfig.equals("-csv")){
+                DAOCsv daoCsv = new DAOCsv();   
+                daoCsv.exportTranslatedCSVinstances(mappingTask, targetPath, 1);
+            } else {
+                ReadFiles f = new ReadFiles(exportDatabaseConfig);
+                ArrayList<String> config = f.getExportDatabaseConfig();
+                DAOSql dao = new DAOSql();
+                dao.exportTranslatedSQLInstances(mappingTask, 1, config.get(0), config.get(1)+config.get(4), config.get(2), config.get(3));
+            }
             System.out.println();
-            System.out.println("Translated instances successfully exported to "+targetPath);            
+            System.out.println("Translated instances successfully exported to " + targetPath);            
         } catch (DAOException | SQLException | IOException ex) {
             System.out.println(ex);
             System.exit(-1);

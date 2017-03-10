@@ -3,7 +3,6 @@ package mipmapreduced;
 import it.unibas.spicy.persistence.DAOException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import org.apache.commons.io.FilenameUtils;
 import utils.ReadFiles;
 
@@ -11,55 +10,59 @@ public class MIPMapReduced {
   
     /**
      * @param args the command line arguments
+     * @author ioannisxar
      */
     public static void main(String[] args) {
         try{     
-            if (args[0].equals("-unpivot")){
+            if (args[0].equals("-unpivot")) {
                 unPivotCommand(args);
-            } else if (args[0].equals("-csv_delimeter")){
+            } else if (args[0].equals("-csv_delimeter")) {
                 csvDelimeterCommand(args);
-            }
-            else {
-                if (args.length > 4) {
-                    printWrongInputMessage("translate");
-                }                
-                else {                 
-                    String absoluteMappingTaskFilepath = FilenameUtils.separatorsToSystem(args[0]);
-                    String exportPath = FilenameUtils.separatorsToSystem(args[1]);
-                    String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
-                    String exportDatabaseConfig = FilenameUtils.separatorsToSystem(args[3]);
-                    boolean pkConstraints = true;
-                    if (args.length == 5){                
-                        String pk = args[4];
-                        if (pk.equalsIgnoreCase("t") || pk.equalsIgnoreCase("true"))
-                            pkConstraints = true;
-                        else if (pk.equalsIgnoreCase("f") || pk.equalsIgnoreCase("false"))
-                            pkConstraints = false;
-                        else 
-                            System.out.println("Last parameter must be either \"t\" (true) or \"f\" (false). Default value is true.");
-                    }                
-
-                    DirectoryChecker checker = new DirectoryChecker();
-                    if (checker.checkFileValidity(absoluteMappingTaskFilepath) 
-                        && checker.checkDirectoryValidity(exportPath)
-                        && checker.checkFileValidity(dbConfFile)) {            
-                        DbConnector dbconnect = new DbConnector();        
-                        dbconnect.configureDatabaseProperties(dbConfFile); 
-
-                        TaskHandler handleMappingTask = new TaskHandler(absoluteMappingTaskFilepath, exportPath, exportDatabaseConfig, pkConstraints);
-                        handleMappingTask.performAction(); 
-                    }
-                    else {
-                        System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
-                        System.exit(-1);
-                    }
-                }
+            } else {
+                translateCommand(args);
             }
         }        
         catch (Exception ex){
             System.err.println(ex);
             System.exit(-1);
         }        
+    }
+
+    private static void translateCommand(String[] args){
+        if (args.length > 4) {
+            printWrongInputMessage("translate");
+        }                
+        else {                 
+            String absoluteMappingTaskFilepath = FilenameUtils.separatorsToSystem(args[0]);
+            String exportPath = FilenameUtils.separatorsToSystem(args[1]);
+            String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
+            String exportDatabaseConfig = FilenameUtils.separatorsToSystem(args[3]);
+            boolean pkConstraints = true;
+            if (args.length == 5){                
+                String pk = args[4];
+                if (pk.equalsIgnoreCase("t") || pk.equalsIgnoreCase("true"))
+                    pkConstraints = true;
+                else if (pk.equalsIgnoreCase("f") || pk.equalsIgnoreCase("false"))
+                    pkConstraints = false;
+                else 
+                    System.out.println("Last parameter must be either \"t\" (true) or \"f\" (false). Default value is true.");
+            }                
+
+            DirectoryChecker checker = new DirectoryChecker();
+            if (checker.checkFileValidity(absoluteMappingTaskFilepath) 
+                && checker.checkDirectoryValidity(exportPath)
+                && checker.checkFileValidity(dbConfFile)) {            
+                DbConnector dbconnect = new DbConnector();        
+                dbconnect.configureDatabaseProperties(dbConfFile); 
+
+                TaskHandler handleMappingTask = new TaskHandler(absoluteMappingTaskFilepath, exportPath, exportDatabaseConfig, pkConstraints);
+                handleMappingTask.performAction(); 
+            }
+            else {
+                System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
+                System.exit(-1);
+            }
+        }  
     }
     
     private static void unPivotCommand(String[] args){
@@ -116,7 +119,6 @@ public class MIPMapReduced {
                 System.err.println("Wrong quote input");
                 System.exit(-1);
             }
-            
             DirectoryChecker checker = new DirectoryChecker();
             if (checker.checkFileValidity(inputPath)) {            
                 TaskHandler handleMappingTask = new TaskHandler(inputPath, sourceDelimiter, sourceQuotes);
@@ -132,6 +134,7 @@ public class MIPMapReduced {
             System.out.println("java -jar <Path To Jar>/MIPMapReduced.jar "
                     + "-unpivot "
                     + "<Path To Mapping Csv File/SomeFile.csv> "
+                    + "<Path To Database Configuration File/Database Configuration File> "
                     + "<new column name> " 
                     + "unpivoting command(-i(gnore) or -u(npivot)) "
                     + "<Path to column file/filename (columns(line by line) that included or excluded(regarding previous command selection) from unpivoting)>");
@@ -140,12 +143,14 @@ public class MIPMapReduced {
             System.out.println("java -jar <Path To Jar>/MIPMapReduced.jar "
                     + "<Path To Export Translated Instances> "
                     + "<Path To Database Configuration File/Database Configuration File> "
+                    + "<Path To Export Database Configuration File/Export Database Configuration File> OR -csv To Export On CSV file in the target path "
                     + "(true/false export possible Primary Key violations - optional)");
         } else if (option.equals("csv_delimeter")){
             System.out.println("\nWrong input. For correct MIPMapReduced usage run jar as:");
             System.out.println("java -jar <Path To Jar>/MIPMapReduced.jar "
+                    + "-csv_delimeter "
                     + "<Path To csv file/csvfile.csv> "
-                    + "input parameter about current delimeter, possible choices: ;, :, tab "
+                    + "input parameter about current delimeter, possible choices: \";\", \":\", tab "
                     + "input parameter about quotes, possible choices: single (for single quote), double (for double quote)");
         }
         System.exit(-1);
