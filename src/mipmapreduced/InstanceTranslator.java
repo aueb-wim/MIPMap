@@ -30,7 +30,7 @@ public class InstanceTranslator {
         String sqltext = mappingTask.getMappingData().getSQLScript(scenarioNo);            
         exSQL.executeScript(mappingTask, sqltext, null, null, null, null,scenarioNo);        
         //in case there were any instances that violated the Primary Key constraints, ask the user to export those instances
-        if (pkConstraints)
+        if (pkConstraints && exportPath != null)
             checkForPKConstraints(mappingTask, exSQL.getPKConstraintsTables(), scenarioNo, exportPath);        
     }
     
