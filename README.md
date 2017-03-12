@@ -19,7 +19,9 @@
 ~~~
 
 __Comments__
+
 1. If you choose `-i` the specified columns will be ignored from the unpivot procedure. On the other hand, if you choose `-u` the columns will be used for the unpivot procedure
+
 2. In the `columns.txt` the columns must specified line by line
 
 #### - Change csv delimeter
@@ -28,6 +30,7 @@ __Comments__
 ~~~ 
 
 __Comments__
+
 1. You can choose among three options about the input csv current delimeter
     * ";" : If the current csv is separated with semi-colon
     * ":" : If the current csv is separated with colon
