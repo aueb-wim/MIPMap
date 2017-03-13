@@ -2,6 +2,7 @@ package mipmapreduced;
 
 import it.unibas.spicy.model.mapping.MappingTask;
 import it.unibas.spicy.persistence.DAOException;
+import it.unibas.spicy.persistence.DAOHandleDB;
 import it.unibas.spicy.persistence.DAOMappingTask;
 import it.unibas.spicy.persistence.csv.ChangeDelimiterCSV;
 import it.unibas.spicy.persistence.csv.DAOCsv;
@@ -92,6 +93,7 @@ public class TaskHandler {
     
     
     public void performAction() {
+        createDB();
         DAOMappingTask daoMappingTask = new DAOMappingTask();
         MappingTask mappingTask;
         try {
@@ -116,6 +118,16 @@ public class TaskHandler {
             System.out.println(ex);
             System.exit(-1);
         }            
+    }
+    
+    private void createDB(){
+        DAOHandleDB daoCreateDB = new DAOHandleDB();
+        try {
+            daoCreateDB.createNewDatabase();
+        } catch (DAOException ex) {
+            System.out.println(ex);
+            System.exit(-1);
+        }
     }
     
 }

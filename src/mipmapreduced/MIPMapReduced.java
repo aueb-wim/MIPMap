@@ -57,6 +57,10 @@ public class MIPMapReduced {
                     else 
                         System.out.println("Last parameter must be either \"t\" (true) or \"f\" (false). Default value is true.");
                 }                
+            } else {
+                System.out.println("Wrong export command!");
+                System.out.println(exportCommand);
+                System.exit(-1);
             }
             if (checker.checkFileValidity(absoluteMappingTaskFilepath) 
                 && checker.checkFileValidity(dbConfFile)) {            
