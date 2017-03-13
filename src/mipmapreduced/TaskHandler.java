@@ -16,11 +16,13 @@ import java.util.Arrays;
 import utils.ReadFiles;
 
 public class TaskHandler {
-    private String fileAbsoluteFile, exportDatabaseConfig, targetPath, newColName, commandForColumns, sourceDelimiter, sourceQuotes;
+    private String fileAbsoluteFile, exportDatabaseConfig, targetPath, newColName, 
+            commandForColumns, sourceDelimiter, sourceQuotes, exportCommand;
     private boolean pkConstraints;
     private String[] selectedColumns;
-    public TaskHandler(String fileAbsoluteFile, String targetPath, String exportDatabaseConfig, boolean pkConstraints) {
+    public TaskHandler(String fileAbsoluteFile, String exportCommand, String targetPath, String exportDatabaseConfig, boolean pkConstraints) {
         this.fileAbsoluteFile = fileAbsoluteFile;
+        this.exportCommand = exportCommand;
         this.targetPath = targetPath;
         this.pkConstraints = pkConstraints;
         this.exportDatabaseConfig = exportDatabaseConfig;
@@ -98,17 +100,18 @@ public class TaskHandler {
             InstanceTranslator translate = new InstanceTranslator();
             translate.performAction(mappingTask, pkConstraints , targetPath);
             
-            if(exportDatabaseConfig.equals("-csv")){
+            if(exportCommand.equals("-csv")){
                 DAOCsv daoCsv = new DAOCsv();   
                 daoCsv.exportTranslatedCSVinstances(mappingTask, targetPath, 1);
-            } else {
+            } else if(exportCommand.equals("-db")) {
                 ReadFiles f = new ReadFiles(exportDatabaseConfig);
                 ArrayList<String> config = f.getExportDatabaseConfig();
                 DAOSql dao = new DAOSql();
-                dao.exportTranslatedSQLInstances(mappingTask, 1, config.get(0), config.get(1)+config.get(4), config.get(2), config.get(3));
+                dao.exportTranslatedSQLInstances(mappingTask, 1, config.get(0), 
+                        config.get(1)+config.get(4), config.get(2), config.get(3));
             }
             System.out.println();
-            System.out.println("Translated instances successfully exported to " + targetPath);            
+            System.out.println("Translate instances successfully!");            
         } catch (DAOException | SQLException | IOException ex) {
             System.out.println(ex);
             System.exit(-1);
