@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -30,7 +32,12 @@ public class ReadFiles {
         try{
             String line;
             while((line = in.readLine()) != null) {
-                columnList.add(line);
+                String col = line.replace("\"", "");
+                Pattern p = Pattern.compile("[^a-zA-Z0-9]");
+                if (p.matcher(col).find()) {
+                    col = col.replaceAll("[\\W]|_", "_");
+                }
+                columnList.add(col);
             }
         } catch(IOException ex){
             System.err.print(ex);
@@ -57,4 +64,25 @@ public class ReadFiles {
         }
         return config;
     }
+    
+    public HashMap<String, String> getPaths(){
+        File folder = new File(fileName); 
+        HashMap<String, String> paths = new HashMap<>();
+        for (final File fileEntry : folder.listFiles()) {
+            if(fileEntry.getName().contains(".csv"))
+                paths.put(fileEntry.getName().replace(".csv","").trim(), fileName+"/"+fileEntry.getName());
+        }
+        return paths;
+    }
+    
+    public int openTargetDirectory() {
+        int num = 0;
+        File folder = new File(fileName); 
+        for (final File fileEntry : folder.listFiles()) {
+            if(fileEntry.getName().contains(".csv"))
+                num++;
+        }
+        return num;
+    }
+    
 }

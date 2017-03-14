@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import utils.ReadFiles;
 
 public class TaskHandler {
@@ -49,10 +50,11 @@ public class TaskHandler {
         try {
             UnpivotCSVDAO daoUnpivot = new UnpivotCSVDAO();
             File file = new File(fileAbsoluteFile);
-            String[] columnNames = daoUnpivot.getCsvTableColumns(file);
-            
+            String[] columnNames = daoUnpivot.getCsvTableColumnsWithoutSpecialCharacters(file);
+            System.out.println(fileAbsoluteFile);
             if (commandForColumns.equals("-i")){
                 for(String col: columnNames){
+                    
                     if (Arrays.asList(selectedColumns).contains(col)){
                         keepColNames.add(col);
                     } else {
@@ -61,6 +63,7 @@ public class TaskHandler {
                 }
             } else if (commandForColumns.equals("-u")) {
                 for(String col: columnNames){
+                    
                     if (!Arrays.asList(selectedColumns).contains(col)){
                         keepColNames.add(col);
                     } else {
@@ -71,7 +74,6 @@ public class TaskHandler {
                 System.err.println("Wrong unpivot command");
                 System.exit(-1);
             }          
-            
             daoUnpivot.unpivotTable(keepColNames, colNames, newColName, file);
         } catch (IOException ex) {
             System.out.println(ex);
@@ -103,8 +105,13 @@ public class TaskHandler {
             translate.performAction(mappingTask, pkConstraints , targetPath);
             
             if(exportCommand.equals("-csv")){
-                DAOCsv daoCsv = new DAOCsv();   
-                daoCsv.exportTranslatedCSVinstances(mappingTask, targetPath, 1);
+                ReadFiles folder = new ReadFiles(targetPath);
+                DAOCsv daoCsv = new DAOCsv();
+                if(folder.openTargetDirectory()==0) {    
+                    daoCsv.exportTranslatedCSVinstances(mappingTask, targetPath, 1);
+                } else {
+                    daoCsv.appendTranslatedCSVinstances(mappingTask, folder.getPaths(), 1);
+                }
             } else if(exportCommand.equals("-db")) {
                 ReadFiles f = new ReadFiles(exportDatabaseConfig);
                 ArrayList<String> config = f.getExportDatabaseConfig();
