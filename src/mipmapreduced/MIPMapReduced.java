@@ -59,7 +59,6 @@ public class MIPMapReduced {
                 }                
             } else {
                 System.out.println("Wrong export command!");
-                System.out.println(exportCommand);
                 System.exit(-1);
             }
             if (checker.checkFileValidity(absoluteMappingTaskFilepath) 

@@ -51,7 +51,6 @@ public class TaskHandler {
             UnpivotCSVDAO daoUnpivot = new UnpivotCSVDAO();
             File file = new File(fileAbsoluteFile);
             String[] columnNames = daoUnpivot.getCsvTableColumnsWithoutSpecialCharacters(file);
-            System.out.println(fileAbsoluteFile);
             if (commandForColumns.equals("-i")){
                 for(String col: columnNames){
                     
