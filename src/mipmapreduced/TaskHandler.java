@@ -77,7 +77,7 @@ public class TaskHandler {
         } catch (IOException ex) {
             System.out.println(ex);
             System.exit(-1);
-        } 
+        }
     }
     
     public void changeDelimeter() {
