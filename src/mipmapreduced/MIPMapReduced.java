@@ -18,6 +18,8 @@ public class MIPMapReduced {
                 unPivotCommand(args);
             } else if (args[0].equals("-csv_delimeter")) {
                 csvDelimeterCommand(args);
+            } else if(args[0].equals("-generate_id")){
+                generateId(args);
             } else {
                 translateCommand(args);
             }
@@ -28,6 +30,15 @@ public class MIPMapReduced {
         }        
     }
 
+    private static void generateId(String[] args) throws IOException, SQLException, ClassNotFoundException {
+        String generateIdFilePath = FilenameUtils.separatorsToSystem(args[1]);
+        DirectoryChecker checker = new DirectoryChecker();
+        if (checker.checkFileValidity(generateIdFilePath)) {
+            TaskHandler handleMappingTask = new TaskHandler(generateIdFilePath);
+            handleMappingTask.generateId();
+        }
+    }
+    
     private static void translateCommand(String[] args){
         if (args.length > 4) {
             printWrongInputMessage("translate");

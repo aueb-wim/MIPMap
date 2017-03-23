@@ -6,6 +6,7 @@ import it.unibas.spicy.persistence.DAOMappingTask;
 import it.unibas.spicy.persistence.csv.ChangeDelimiterCSV;
 import it.unibas.spicy.persistence.csv.DAOCsv;
 import it.unibas.spicy.persistence.csv.UnpivotCSVDAO;
+import it.unibas.spicy.persistence.idgenerator.generator.GenerateId;
 import it.unibas.spicy.persistence.sql.DAOSql;
 import it.unibas.spicy.utility.SpicyEngineConstants;
 import java.io.File;
@@ -27,6 +28,10 @@ public class TaskHandler {
         
     }
     
+    public TaskHandler(String fileAbsoluteFile){
+        this.fileAbsoluteFile = fileAbsoluteFile;
+    }
+    
     public TaskHandler(String fileAbsoluteFile, String commandForColumns, String[] selectedColumns, String newColName) {
         this.fileAbsoluteFile = fileAbsoluteFile;
         this.selectedColumns = selectedColumns;
@@ -38,6 +43,12 @@ public class TaskHandler {
         this.fileAbsoluteFile = fileAbsoluteFile;
         this.sourceDelimiter = sourceDelimiter;
         this.sourceQuotes = sourceQuotes;
+    }
+    
+    public void generateId() throws IOException, SQLException, ClassNotFoundException{
+        System.out.println("ok");
+        GenerateId generator = new GenerateId(fileAbsoluteFile);
+        generator.performAction();
     }
     
     public void unPivot() throws DAOException, SQLException, IOException{
