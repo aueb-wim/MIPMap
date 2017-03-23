@@ -50,7 +50,6 @@ public class TaskHandler {
     }
     
     public void generateId() throws IOException, SQLException, ClassNotFoundException{
-        System.out.println("ok");
         GenerateId generator = new GenerateId(fileAbsoluteFile);
         generator.performAction();
     }
