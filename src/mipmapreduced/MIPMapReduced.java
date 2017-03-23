@@ -40,33 +40,45 @@ public class MIPMapReduced {
     }
     
     private static void translateCommand(String[] args){
-        if (args.length > 4) {
+        if (args.length > 5) {
             printWrongInputMessage("translate");
         }                
         else {                 
             String absoluteMappingTaskFilepath = FilenameUtils.separatorsToSystem(args[0]);
-            String exportPath = FilenameUtils.separatorsToSystem(args[1]);
-            String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
-            String exportDatabaseConfig = FilenameUtils.separatorsToSystem(args[3]);
+            String dbConfFile = FilenameUtils.separatorsToSystem(args[1]);
+            String exportCommand = FilenameUtils.separatorsToSystem(args[2]);
+            String exportDatabaseConfig = null;
+            String exportPath = null;
             boolean pkConstraints = true;
-            if (args.length == 5){                
-                String pk = args[4];
-                if (pk.equalsIgnoreCase("t") || pk.equalsIgnoreCase("true"))
-                    pkConstraints = true;
-                else if (pk.equalsIgnoreCase("f") || pk.equalsIgnoreCase("false"))
-                    pkConstraints = false;
-                else 
-                    System.out.println("Last parameter must be either \"t\" (true) or \"f\" (false). Default value is true.");
-            }                
-
             DirectoryChecker checker = new DirectoryChecker();
+            if(exportCommand.equals("-db")){
+                exportDatabaseConfig = FilenameUtils.separatorsToSystem(args[3]);
+            } else if (exportCommand.equals("-csv")){
+                exportPath = FilenameUtils.separatorsToSystem(args[3]);
+                if (!checker.checkDirectoryValidity(exportPath)) {
+                    System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
+                    System.exit(-1);
+                }
+                if (args.length == 5){                
+                    String pk = args[4];
+                    if (pk.equalsIgnoreCase("t") || pk.equalsIgnoreCase("true"))
+                        pkConstraints = true;
+                    else if (pk.equalsIgnoreCase("f") || pk.equalsIgnoreCase("false"))
+                        pkConstraints = false;
+                    else 
+                        System.out.println("Last parameter must be either \"t\" (true) or \"f\" (false). Default value is true.");
+                }                
+            } else {
+                System.out.println("Wrong export command!");
+                System.exit(-1);
+            }
             if (checker.checkFileValidity(absoluteMappingTaskFilepath) 
-                && checker.checkDirectoryValidity(exportPath)
                 && checker.checkFileValidity(dbConfFile)) {            
                 DbConnector dbconnect = new DbConnector();        
                 dbconnect.configureDatabaseProperties(dbConfFile); 
 
-                TaskHandler handleMappingTask = new TaskHandler(absoluteMappingTaskFilepath, exportPath, exportDatabaseConfig, pkConstraints);
+                TaskHandler handleMappingTask = new TaskHandler(absoluteMappingTaskFilepath, exportCommand, exportPath, 
+                        exportDatabaseConfig, pkConstraints);
                 handleMappingTask.performAction(); 
             }
             else {

@@ -5,6 +5,7 @@ import it.unibas.spicy.model.mapping.IDataSourceProxy;
 import it.unibas.spicy.model.mapping.MappingTask;
 import it.unibas.spicy.persistence.AccessConfiguration;
 import it.unibas.spicy.persistence.DAOException;
+import it.unibas.spicy.persistence.DAOHandleDB;
 import it.unibas.spicy.persistence.csv.DAOCsv;
 import it.unibas.spicy.persistence.relational.DAORelational;
 import it.unibas.spicy.persistence.relational.DBFragmentDescription;
@@ -21,6 +22,7 @@ public class InstanceTranslator {
     public InstanceTranslator() {}
     
     public void performAction (MappingTask mappingTask, boolean pkConstraints, String exportPath) throws DAOException, SQLException, IOException{
+        
         loadSourceInstancesBeforeTranslation(mappingTask.getSourceProxy(), 1);
         translateToDatabase(mappingTask, 1, pkConstraints, exportPath);  
     }
@@ -30,7 +32,7 @@ public class InstanceTranslator {
         String sqltext = mappingTask.getMappingData().getSQLScript(scenarioNo);            
         exSQL.executeScript(mappingTask, sqltext, null, null, null, null,scenarioNo);        
         //in case there were any instances that violated the Primary Key constraints, ask the user to export those instances
-        if (pkConstraints)
+        if (pkConstraints && exportPath != null)
             checkForPKConstraints(mappingTask, exSQL.getPKConstraintsTables(), scenarioNo, exportPath);        
     }
     
@@ -52,6 +54,7 @@ public class InstanceTranslator {
             daoRelational.loadInstance(scenarioNo, accessConfiguration, dataSource, dataDescription, dataSourceDB, true);
         }
     }
+    
     
     private void checkForPKConstraints(MappingTask mappingTask, HashSet<String> pkTableNames, int scenarioNo, String exportPath) throws DAOException, IOException{
         if (!pkTableNames.isEmpty()){            
