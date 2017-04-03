@@ -39,3 +39,47 @@ __Comments__
 2. You can choose among three options about the input csv current quote style
     * single : If the current csv includes single quotes
     * double : If the current csv includes double quotes
+
+#### - Generate id using columns from source to target table
+~~~
+-generate_id [path to properties file]/file.properties
+~~~
+
+__Properties file commands__
+
+1. Specify the source input
+    ~~~
+    commandSource={csv | db}
+    ~~~
+
+2. Specify source input path
+    ~~~
+    sourceInputPath= {[path to csv file]/file.csv | [path to database properties file],[name of the table to extract data]
+    ~~~
+
+3. Specify the target input
+    ~~~
+    commandTarget={csv | db}
+    ~~~
+
+4. Specify target input path
+    ~~~
+    targetInputPath= {[path to csv file]/file.csv | [path to database properties file],[name of the table to extract data]}
+    ~~~
+
+5. Names of the target columns
+    ~~~
+    targetColumns=[col11,col22,col33,generated_id]
+    ~~~
+
+6. Specify a transformation function to the source columns
+   If no transformation function is selected the actual data from the source input are used.
+   If any string value lies inside quotes, every tuple in the specific column have this value.
+    ~~~
+    functionPerColumn=[split(col1,_,0),"constant value",col3]
+    ~~~
+
+7. Output csv file
+    ~~~
+    outputFile=[path to csv file]/file.csv
+    ~~~ 
