@@ -73,7 +73,9 @@ __Properties file commands__
     ~~~
 
 6. Specify a transformation function to the source columns
+
    If no transformation function is selected the actual data from the source input are used.
+
    If any string value lies inside quotes, every tuple in the specific column have this value.
     ~~~
     functionPerColumn=[split(col1,_,0),"constant value",col3]
