@@ -89,22 +89,26 @@ public class MIPMapReduced {
     }
     
     private static void unPivotCommand(String[] args){
-        if (args.length != 6) {
+        if (args.length != 7) {
             printWrongInputMessage("unpivot");
         } else {
             try{
                 String inputPath = FilenameUtils.separatorsToSystem(args[1]);
                 String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
                 String newColName = args[3];
-                String commandForColumns = args[4];
-                ReadFiles f = new ReadFiles(args[5]);
-                String[] columns = f.readByLine();
+                
+                ReadFiles f1 = new ReadFiles(args[4]);
+                String[] columns = f1.readByLine();
+                
+                String commandForColumns = args[5];
+                ReadFiles f = new ReadFiles(args[6]);
+                String[] columnsToAlter = f.readByLine();
                 DirectoryChecker checker = new DirectoryChecker();
                 if (checker.checkFileValidity(inputPath) && checker.checkFileValidity(dbConfFile)) { 
                     DbConnector dbconnect = new DbConnector();        
                     dbconnect.configureDatabaseProperties(dbConfFile); 
                     TaskHandler handleMappingTask = 
-                            new TaskHandler(inputPath, commandForColumns, columns, newColName);
+                            new TaskHandler(inputPath, columns, commandForColumns, columnsToAlter, newColName);
                     handleMappingTask.unPivot();
                 } else {
                     System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
