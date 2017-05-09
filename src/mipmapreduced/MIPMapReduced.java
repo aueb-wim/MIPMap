@@ -96,10 +96,8 @@ public class MIPMapReduced {
                 String inputPath = FilenameUtils.separatorsToSystem(args[1]);
                 String dbConfFile = FilenameUtils.separatorsToSystem(args[2]);
                 String newColName = args[3];
-                
                 ReadFiles f1 = new ReadFiles(args[4]);
                 String[] columns = f1.readByLine();
-                
                 String commandForColumns = args[5];
                 ReadFiles f = new ReadFiles(args[6]);
                 String[] columnsToAlter = f.readByLine();
