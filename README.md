@@ -15,7 +15,7 @@
 
 #### - Unpivot csv file
 ~~~
--unpivot [path to csv]/inputCsv.csv [path to database config file]/db.properties nameOfNewColumn {-i(gnore) or -u(npivot} [path to the text file with the columns]/columns.txt
+-unpivot [path to csv]/inputCsv.csv [path to database config file]/db.properties nameOfNewColumn [path to selected columns file]/selectedColumns.txt {-i(gnore) or -u(npivot} [path to altered columns file]/alteredColumns.txt
 ~~~
 
 __Comments__
