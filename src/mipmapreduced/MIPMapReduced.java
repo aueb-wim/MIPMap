@@ -161,8 +161,9 @@ public class MIPMapReduced {
                     + "<Path To Mapping Csv File/SomeFile.csv> "
                     + "<Path To Database Configuration File/Database Configuration File> "
                     + "<new column name> " 
+                    + "<Path To selected columns file/filename> "
                     + "unpivoting command(-i(gnore) or -u(npivot)) "
-                    + "<Path to column file/filename (columns(line by line) that included or excluded(regarding previous command selection) from unpivoting)>");
+                    + "<Path to altered column file/filename (columns(line by line) that included or excluded(regarding previous command selection) from unpivoting)>");
         } else if (option.equals("translate")){
             System.out.println("\nWrong input. For correct MIPMapReduced usage run jar as:");
             System.out.println("java -jar <Path To Jar>/MIPMapReduced.jar "
