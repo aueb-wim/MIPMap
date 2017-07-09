@@ -26,6 +26,25 @@ public class ReadFiles {
         this.fileName = fileName;    
     }
     
+    //avenet
+    public String readByLineSimple() throws IOException {
+        String script = "";
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        try{
+            String line;
+            while((line = in.readLine()) != null) {
+                String col = line.replace("\"", "");
+                script=script+col+"\n";
+            }
+        } catch(IOException ex){
+            System.err.print(ex);
+            System.exit(-1);
+        } finally {
+            in.close();
+        }
+        return script;
+    }
+    
     public String[] readByLine() throws IOException {
         ArrayList<String> columnList = new ArrayList();
         BufferedReader in = new BufferedReader(new FileReader(fileName));
