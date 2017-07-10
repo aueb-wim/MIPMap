@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import org.apache.commons.io.FilenameUtils;
 import utils.ReadFiles;
 import it.unibas.spicy.persistence.relational.SimpleDbConnectionFactory;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -30,7 +28,6 @@ public class MIPMapReduced {
                 generateId(args);
             } else if(args[0].equals("-runsql")){
                 runsql(args);
-                System.out.println("arg[1] = " + args[1] + "\nargs[2] = " + args[2]);
             }
             else {
                 translateCommand(args);
@@ -50,24 +47,14 @@ public class MIPMapReduced {
         if (checker.checkFileValidity(dbConfFile) && checker.checkFileValidity(sqlFile)) {
             ReadFiles f = new ReadFiles(dbConfFile);
             ArrayList<String> config = f.getExportDatabaseConfig();
-
             ReadFiles sqlReader = new ReadFiles(sqlFile);
             String sqlScript = sqlReader.readByLineSimple();
-            System.out.println("sqlScript is: " + sqlScript );
-
-            
-            IConnectionFactory connectionFactory = new SimpleDbConnectionFactory();;
-            Connection connection = null;
-            connection = getConnectionToDatabase(connectionFactory, config.get(0),config.get(1)+config.get(4), config.get(2), config.get(3));
-            Statement statement = connection.createStatement();
-//            statement.executeUpdate(createTableQuery);
-//            CallableStatement stm = connection.prepareCall("{ ? = call test() }");
-//            stm.execute();
-            ResultSet rs = statement.executeQuery(sqlScript);
-            while (rs.next()) {
-                System.out.println(rs.getString(1) + "\t\t" + rs.getString(2));
+            IConnectionFactory connectionFactory = new SimpleDbConnectionFactory();
+            try (Connection connection = getConnectionToDatabase(connectionFactory, config.get(0),config.get(1)+config.get(4), config.get(2), config.get(3))) {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(sqlScript);
             }
-            
+            System.out.println("SQL script executed successfully!");
         } else {
             System.out.println("\nInvalid path input or the file/path does not exist: " + checker.getInvalidFilePath());
             System.exit(-1);
@@ -81,7 +68,6 @@ public class MIPMapReduced {
         accessConfiguration.setUri(uri);
         accessConfiguration.setLogin(login);
         accessConfiguration.setPassword(pass);
-        
         return connectionFactory.getConnection(accessConfiguration);
     }
 
