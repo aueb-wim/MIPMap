@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import org.apache.commons.io.FilenameUtils;
 import utils.ReadFiles;
 import it.unibas.spicy.persistence.relational.SimpleDbConnectionFactory;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
