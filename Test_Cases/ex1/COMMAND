@@ -1,0 +1,1 @@
+java -jar [path to jar]/MIPMapReduced.jar [path to mapping task]/mapping_task.xml [path to db config]/postgresdb.properties -csv [path to export file]

@@ -1,0 +1,4 @@
+- COMMAND file
+	- declare csv file path
+	- select which is the current delimeter
+	- select the quote format of the generated values in csv

@@ -1,0 +1,3 @@
+- COMMAND file
+	- declare the path of properties file
+	- Run the command in console

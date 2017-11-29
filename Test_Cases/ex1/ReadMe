@@ -1,0 +1,5 @@
+- COMMAND file
+	- declare the paths of your file system
+
+- postgresdb.properties
+	- declare the following fields: username, password, mappingTask-DatabaseName

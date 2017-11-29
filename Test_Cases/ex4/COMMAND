@@ -1,0 +1,3 @@
+
+java -jar [path to jar]/MIPMapReduced.jar -unpivot [path to csv]/inputCsv.csv [path to database config file]/db.properties nameOfNewColumn [path to selected columns file]/selectedColumns.txt {-i(gnore) or -u(npivot} [path to altered columns file]/alteredColumns.txt
+
