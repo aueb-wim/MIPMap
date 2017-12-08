@@ -1,0 +1,2 @@
+java -jar [path to jar]/MIPMapReduced.jar -csv_delimeter <path>/test.csv {";" | ":" | tab} {single | double}
+
