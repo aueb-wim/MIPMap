@@ -22,14 +22,14 @@ public class InstanceTranslator {
     public InstanceTranslator() {}
     
     public void performAction (MappingTask mappingTask, boolean pkConstraints, String exportPath) throws DAOException, SQLException, IOException{
-        
         loadSourceInstancesBeforeTranslation(mappingTask.getSourceProxy(), 1);
         translateToDatabase(mappingTask, 1, pkConstraints, exportPath);  
     }
     
     private void translateToDatabase(MappingTask mappingTask, int scenarioNo, boolean pkConstraints, String exportPath) throws DAOException, IOException {
         ExecuteSQL exSQL = new ExecuteSQL();
-        String sqltext = mappingTask.getMappingData().getSQLScript(scenarioNo);            
+        String sqltext = mappingTask.getMappingData().getSQLScript(scenarioNo);
+        System.out.println("SQL SCRIPT\n-----------------" + sqltext);
         exSQL.executeScript(mappingTask, sqltext, null, null, null, null,scenarioNo);        
         //in case there were any instances that violated the Primary Key constraints, ask the user to export those instances
         if (pkConstraints && exportPath != null)
