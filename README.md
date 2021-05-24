@@ -1,4 +1,4 @@
-# MIPMapReduced
+# MIPMap (ex-MIPMapRecuded)
 ### Available functionality
 
 #### - Translate instance and export to database
